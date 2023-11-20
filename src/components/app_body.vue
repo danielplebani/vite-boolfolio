@@ -26,7 +26,7 @@ export default {
       <img :src="project.cover_image" class="card-img-top" />
       <div class="card-body">
         <h5 class="card-title">{{ project.name }}</h5>
-        <p class="card-text">{{ project.content }}</p>
+        <p class="card-text" v-if="project.content">{{ project.content }}</p>
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" v-if="project.type">
@@ -48,4 +48,3 @@ export default {
     </div>
   </div>
 </template>
-
