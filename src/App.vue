@@ -1,20 +1,20 @@
 <script>
-  import app_header from './components/app_header.vue';
-  import app_body from './components/app_body.vue';
-  import app_footer from './components/app_footer.vue';
+import app_header from "./components/app_header.vue";
 
-
-  export default {
-    components: {
-      app_header,
-      app_body,
-      app_footer
-    }
-  }
+export default {
+  components: {
+    app_header,
+  },
+};
 </script>
 
 <template>
   <app_header></app_header>
-  <app_body></app_body>
-  <app_footer></app_footer>
+  <router-view id="main" class="py-5"></router-view>
 </template>
+
+<style scoped lang="scss">
+#main {
+  min-height: 55vh;
+}
+</style>

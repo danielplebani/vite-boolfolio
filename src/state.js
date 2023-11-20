@@ -5,7 +5,6 @@ export const state = reactive({
     base_url: 'http://127.0.0.1:8000',
     base_uri: '/api/projects',
     projects: null,
-    pages: null,
   
     connectAPI(){
       axios

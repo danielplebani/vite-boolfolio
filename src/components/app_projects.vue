@@ -45,6 +45,12 @@ export default {
         <a :href="project.link_github" class="card-link">link github</a>
         <a :href="project.link_website" class="card-link">link sito web</a>
       </div>
+
+      <div class="card-footer">
+        <router-link class="btn btn-primary" :to="{ name: 'SingleProjectView', params: { id: project.id } }"
+          >Vedi progetto</router-link
+        >
+      </div>
     </div>
   </div>
 </template>
