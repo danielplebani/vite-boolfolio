@@ -5,7 +5,7 @@ export default {
 </script>
 
 <template>
-  <div class="container d-flex gap-4">
+  <div class="container d-flex gap-4 py-5">
     <div id="my-profile">
       <div class="card">
         <div class="card__img">

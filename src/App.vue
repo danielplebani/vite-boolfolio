@@ -1,6 +1,7 @@
 <script>
 import app_header from "./components/app_header.vue";
 
+
 export default {
   components: {
     app_header,
@@ -15,6 +16,6 @@ export default {
 
 <style scoped lang="scss">
 #main {
-  min-height: 55vh;
+  min-height: 80vh;
 }
 </style>

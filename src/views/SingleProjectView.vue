@@ -5,7 +5,7 @@ export default {
   name: "SingleProjectView",
   data() {
     return {
-      project: {},
+      project: null,
     };
   },
   mounted() {
@@ -24,28 +24,45 @@ export default {
 </script>
 
 <template>
-  <div class="container d-flex">
-    <div class="col">
-      <img
-        class="img-fluid object-fit-cover"
-        :src="project.cover_image"
-        style="height: 400px"
-      />
-    </div>
-    <div class="col">
-      <h1 class="text-white">{{ project.name }}</h1>
-      <p v-if="project.content">{{ project.content }}</p>
+  <div v-if="project">
+    <div class="container d-flex">
+      <div class="col">
+        <img
+          class="img-fluid object-fit-cover"
+          :src="project.cover_image"
+          style="height: 400px"
+        />
+      </div>
+      <div class="col">
+        <h1 class="text-white">{{ project.name }}</h1>
+        <p class="mb-3" v-if="project.content">{{ project.content }}</p>
 
-      <span v-if="project.type">TIPOLOGIA DI FILE: "{{ project.type.name }}"</span> <br>
+        <div class="mb-3" v-if="project.type">
+          TIPOLOGIA DI FILE: "{{ project.type.name }}"
+        </div>
 
-      <a style="color: black;" :href="project.link_github">link github</a> <br>
-      <a style="color: black;" :href="project.link_website">link website</a>
+        <div class="d-flex gap-3 mb-3">
+          <a style="color: black" :href="project.link_github">link github</a>
+          <a style="color: darkblue" :href="project.link_website"
+            >link website</a
+          >
+        </div>
 
-      <!-- <ul v-if="project.technologies.length != 0">
-        <span>tecnologie usate:</span>
-        <li v-for="technology in project.technologies">{{ technology.name }}</li>
-      </ul> -->  
-      
+        <div v-if="project.technologies.length != 0">
+          <span>tecnologie usate:</span>
+          <ul>
+            <li v-for="technology in project.technologies">
+              {{ technology.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
+
+  <div v-else>
+    <h1 class="text-center">loading...</h1>
+  </div>
 </template>
+
+

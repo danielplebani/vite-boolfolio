@@ -47,7 +47,9 @@ export default {
       </div>
 
       <div class="card-footer">
-        <router-link class="btn btn-primary" :to="{ name: 'SingleProjectView', params: { id: project.id } }"
+        <router-link
+          class="btn btn-primary"
+          :to="{ name: 'SingleProjectView', params: { id: project.id } }"
           >Vedi progetto</router-link
         >
       </div>
