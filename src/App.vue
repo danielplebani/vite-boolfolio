@@ -1,9 +1,11 @@
 <script>
 import app_header from "./components/app_header.vue";
+import app_footer from "./components/app_footer.vue";
 
 
 export default {
   components: {
+    app_footer,
     app_header,
   },
 };
@@ -11,7 +13,9 @@ export default {
 
 <template>
   <app_header></app_header>
-  <router-view id="main" class="py-5"></router-view>
+  <router-view id="main"></router-view>
+  <app_footer></app_footer>
+  
 </template>
 
 <style scoped lang="scss">

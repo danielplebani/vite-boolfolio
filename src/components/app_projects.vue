@@ -17,6 +17,16 @@ export default {
 </script>
 
 <template>
+  <div class="p-5 mb-4 bg-dark text-light">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold">I miei progetti</h1>
+      <p class="col-md-8 fs-4">Trova le notizie più importanti dei migliori autori</p>
+      <button class="btn btn-primary btn-lg" type="button">
+        Trova
+      </button>
+    </div>
+  </div>
+
   <div class="container py-4 d-flex justify-content-center flex-wrap gap-2">
     <div
       class="card"
