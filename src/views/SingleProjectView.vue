@@ -36,14 +36,16 @@ export default {
       <h1 class="text-white">{{ project.name }}</h1>
       <p v-if="project.content">{{ project.content }}</p>
 
-      <div v-if="project.type">
-        <span>TIPOLOGIA DI FILE: "{{ project.type.name }}"</span>
-      </div>
+      <span v-if="project.type">TIPOLOGIA DI FILE: "{{ project.type.name }}"</span> <br>
+
+      <a style="color: black;" :href="project.link_github">link github</a> <br>
+      <a style="color: black;" :href="project.link_website">link website</a>
 
       <!-- <ul v-if="project.technologies.length != 0">
         <span>tecnologie usate:</span>
         <li v-for="technology in project.technologies">{{ technology.name }}</li>
       </ul> -->  
+      
     </div>
   </div>
 </template>
