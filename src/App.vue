@@ -13,13 +13,9 @@ export default {
 
 <template>
   <app_header></app_header>
-  <router-view id="main"></router-view>
+  <router-view></router-view>
   <app_footer></app_footer>
   
 </template>
 
-<style scoped lang="scss">
-#main {
-  min-height: 80vh;
-}
-</style>
+

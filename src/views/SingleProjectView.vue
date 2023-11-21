@@ -13,8 +13,13 @@ export default {
     axios
       .get(url)
       .then((response) => {
-        console.log(response.data.result);
-        this.project = response.data.result;
+        //console.log(response);
+        if (response.data.success) {
+          this.project = response.data.result;
+        } else {
+          // pusha la rotta 404 
+          this.$router.push({ name: 'NotFoundView' });
+        }
       })
       .catch((error) => {
         console.log(error.message);
@@ -25,7 +30,7 @@ export default {
 
 <template>
   <div v-if="project">
-    <div class="container d-flex">
+    <div class="container my-5 d-flex">
       <div class="col">
         <img
           class="img-fluid object-fit-cover"
