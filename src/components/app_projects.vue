@@ -27,7 +27,7 @@ export default {
     </div>
   </div>
 
-  <div class="container py-4 d-flex justify-content-center flex-wrap gap-5">
+  <div class="container py-4 d-flex justify-content-center flex-wrap">
     <div class="card" v-for="project in state.projects">
       <div class="align">
         <span class="red"></span>
@@ -37,10 +37,15 @@ export default {
 
       <div class="d-flex flex-column gap-2">
         <div>
-          <h5>{{ project.name }}</h5>
+          <h4>{{ project.name }}</h4>
         </div>
 
-        <img :src="project.cover_image" class="card-img-top" />
+        <img
+          v-if="project.cover_image && !project.cover_image.startsWith('http')"
+          :src="state.base_url + '/storage/' + project.cover_image"
+          class="card-img-top"
+        />
+        <img v-else :src="project.cover_image" class="card-img-top" />
 
         <p class="m-0 text-white" v-if="project.content">
           {{ project.content }}
@@ -83,9 +88,13 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.container{
+  gap: 100px;
+}
 .card {
+  //align-self: flex-start;
+  height: auto;
   width: calc(100% / 4);
-  height: 17rem;
   padding: 0.5rem;
   background: rgba(198, 198, 198, 0.34);
   border-radius: 8px;
@@ -96,7 +105,7 @@ export default {
   transform: skewX(10deg);
   transition: 1s;
   overflow: hidden;
-  color:antiquewhite;
+  color: antiquewhite;
   background: rgb(63, 94, 251);
   background: radial-gradient(
     circle,
@@ -146,10 +155,6 @@ export default {
 .card:hover {
   height: auto;
   transform: skew(0deg);
-
-  img {
-    width: 70%;
-  }
 }
 
 .align {

@@ -17,5 +17,3 @@ export default {
   <app_footer></app_footer>
   
 </template>
-
-
