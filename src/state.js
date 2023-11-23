@@ -2,16 +2,20 @@ import { reactive } from "vue";
 import axios from "axios";
 
 export const state = reactive({
-  base_url: "http://127.0.0.1:8000",
-  base_uri: "/api/projects",
   projects: null,
+  links: null,
+  baseURL: "http://127.0.0.1:8000/",
+  projectsURI: "api/projects",
+  currentPage: 1,
+  pageURI: "/?page=",
 
   connectAPI() {
     axios
-      .get(this.base_url + this.base_uri)
+      .get(this.baseURL + this.projectsURI + this.pageURI + this.currentPage)
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         this.projects = response.data.results.data;
+        this.links = response.data.results.links;
       })
       .catch((error) => {
         console.error(error);

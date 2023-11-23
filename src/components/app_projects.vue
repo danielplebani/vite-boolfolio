@@ -7,7 +7,38 @@ export default {
   data() {
     return {
       state,
+      pages: null,
     };
+  },
+
+  methods: {
+    firstPage() {
+      this.state.currentPage = 1;
+      this.state.connectAPI();
+    },
+
+    secondPage() {
+      this.state.currentPage = 2;
+      this.state.connectAPI();
+    },
+
+    previousPage() {
+      if (this.state.currentPage === 1) {
+        this.state.currentPage = 2
+      } else {
+        this.state.currentPage--
+      }
+      this.state.connectAPI();
+    },
+
+    nextPage() {
+      if (this.state.currentPage === 2) {
+        this.state.currentPage = 1
+      } else {
+        this.state.currentPage++
+      }
+      this.state.connectAPI();
+    },
   },
 
   created() {
@@ -42,7 +73,7 @@ export default {
 
         <img
           v-if="project.cover_image && !project.cover_image.startsWith('http')"
-          :src="state.base_url + '/storage/' + project.cover_image"
+          :src="state.baseURL + 'storage/' + project.cover_image"
           class="card-img-top"
         />
         <img v-else :src="project.cover_image" class="card-img-top" />
@@ -85,10 +116,42 @@ export default {
       </div>
     </div>
   </div>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination pagination-m justify-content-center my-5">
+      <li class="page-item">
+        <a class="page-link" @click="previousPage()" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" :class="this.state.currentPage === 1 ? 'bg-dark' : ''" @click="firstPage()">1</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" :class="this.state.currentPage === 2 ? 'bg-dark' : ''" @click="secondPage()">2</a>
+      </li>
+
+      <li class="page-item">
+        <a class="page-link" @click="nextPage()" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
 </template>
 
 <style lang="scss" scoped>
-.container{
+.pagination {
+  a {
+    cursor: pointer;
+    color: white;
+    background-color: #ff605c;
+    font-weight: bold;
+    font-size: large;
+  }
+}
+.container {
   gap: 100px;
 }
 .card {
