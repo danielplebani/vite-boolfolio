@@ -320,8 +320,6 @@ export default {
   </div>
 </template>
 
-
-
 <style lang="scss" scoped>
 #social {
   .main {

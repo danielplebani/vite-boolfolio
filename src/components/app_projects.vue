@@ -1,8 +1,13 @@
 <script>
 import { state } from "../state.js";
+import app_filter from "./app_filter.vue";
 
 export default {
   name: "app_body",
+
+  components: {
+    app_filter
+  },
 
   data() {
     return {
@@ -13,35 +18,40 @@ export default {
   methods: {
     firstPage() {
       this.state.currentPage = 1;
-      this.state.connectAPI();
+      this.state.connectProjectsAPI();
     },
 
     secondPage() {
       this.state.currentPage = 2;
-      this.state.connectAPI();
+      this.state.connectProjectsAPI();
     },
 
     previousPage() {
       if (this.state.currentPage === 1) {
-        this.state.currentPage = parseInt(this.state.links[this.state.links.length - 2].label);
+        this.state.currentPage = parseInt(
+          this.state.links[this.state.links.length - 2].label
+        );
       } else {
         this.state.currentPage--;
       }
-      this.state.connectAPI();
+      this.state.connectProjectsAPI();
     },
 
     nextPage() {
-      if (this.state.currentPage === parseInt(this.state.links[this.state.links.length - 2].label)) {
+      if (
+        this.state.currentPage ===
+        parseInt(this.state.links[this.state.links.length - 2].label)
+      ) {
         this.state.currentPage = 1;
       } else {
         this.state.currentPage++;
       }
-      this.state.connectAPI();
+      this.state.connectProjectsAPI();
     },
   },
 
   created() {
-    state.connectAPI();
+    state.connectProjectsAPI();
   },
 };
 </script>
@@ -56,63 +66,75 @@ export default {
     </div>
   </div>
 
-  <div class="container py-4 d-flex justify-content-center flex-wrap">
-    <div class="card" v-for="project in state.projects">
-      <div class="align">
-        <span class="red"></span>
-        <span class="yellow"></span>
-        <span class="green"></span>
-      </div>
-
-      <div class="d-flex flex-column gap-2">
-        <div>
-          <h4>{{ project.name }}</h4>
+  <div class="d-flex justify-content-between px-5">
+    <div class="container py-4 d-flex justify-content-center flex-wrap">
+      <div class="card" v-for="project in state.projects">
+        <div class="align">
+          <span class="red"></span>
+          <span class="yellow"></span>
+          <span class="green"></span>
         </div>
 
-        <img
-          v-if="project.cover_image && !project.cover_image.startsWith('http')"
-          :src="state.baseURL + 'storage/' + project.cover_image"
-          class="card-img-top"
-        />
-        <img v-else :src="project.cover_image" class="card-img-top" />
-
-        <p class="m-0 text-white" v-if="project.content">
-          {{ project.content }}
-        </p>
-
-        <div class="m-0">
-          <span v-if="project.type">
-            tipologia di file: {{ project.type.name }}
-          </span>
-
-          <div class="m-0" v-if="project.technologies.length != 0">
-            <span>tecnologie usate:</span>
-            <ul class="m-0">
-              <li v-for="technology in project.technologies">
-                {{ technology.name }}
-              </li>
-            </ul>
+        <div class="d-flex flex-column gap-2">
+          <div>
+            <h4>{{ project.name }}</h4>
           </div>
-        </div>
 
-        <div>
-          <a style="color: black" :href="project.link_github" class="card-link"
-            >link github</a
-          >
-          <a style="color: black" :href="project.link_website" class="card-link"
-            >link sito web</a
-          >
-        </div>
+          <img
+            v-if="
+              project.cover_image && !project.cover_image.startsWith('http')
+            "
+            :src="state.baseURL + 'storage/' + project.cover_image"
+            class="card-img-top"
+          />
+          <img v-else :src="project.cover_image" class="card-img-top" />
 
-        <div>
-          <router-link
-            class="btn"
-            :to="{ name: 'SingleProjectView', params: { id: project.id } }"
-            >Vedi progetto</router-link
-          >
+          <p class="m-0 text-white" v-if="project.content">
+            {{ project.content }}
+          </p>
+
+          <div class="m-0">
+            <span v-if="project.type">
+              tipologia di file: {{ project.type.name }}
+            </span>
+
+            <div class="m-0" v-if="project.technologies.length != 0">
+              <span>tecnologie usate:</span>
+              <ul class="m-0">
+                <li v-for="technology in project.technologies">
+                  {{ technology.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <a
+              style="color: black"
+              :href="project.link_github"
+              class="card-link"
+              >link github</a
+            >
+            <a
+              style="color: black"
+              :href="project.link_website"
+              class="card-link"
+              >link sito web</a
+            >
+          </div>
+
+          <div>
+            <router-link
+              class="btn"
+              :to="{ name: 'SingleProjectView', params: { id: project.id } }"
+              >Vedi progetto</router-link
+            >
+          </div>
         </div>
       </div>
     </div>
+
+    <app_filter></app_filter>
   </div>
 
   <nav aria-label="Page navigation example">
@@ -148,6 +170,7 @@ export default {
   </nav>
 </template>
 
+
 <style lang="scss" scoped>
 .pagination {
   a {
@@ -159,7 +182,7 @@ export default {
   }
 }
 .container {
-  gap: 100px;
+  gap: 70px;
 }
 .card {
   //align-self: flex-start;

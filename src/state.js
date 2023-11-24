@@ -9,7 +9,7 @@ export const state = reactive({
   currentPage: 1,
   pageURI: "/?page=",
 
-  connectAPI() {
+  connectProjectsAPI() {
     axios
       .get(this.baseURL + this.projectsURI + this.pageURI + this.currentPage)
       .then((response) => {

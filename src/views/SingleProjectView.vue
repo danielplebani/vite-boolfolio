@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default {
   name: "SingleProjectView",
+
   data() {
     return {
       project: null,
@@ -35,13 +36,8 @@ export default {
     <div class="container py-5 d-flex justify-content-around gap-3">
       <div class="MagicCardImg col-7">
         <div class="card-info">
-          <img
-            v-if="
-              project.cover_image && !project.cover_image.startsWith('http')
-            "
-            :src="url + '/storage/' + project.cover_image"
-            class="card-img-top"
-          />
+          <img v-if="project.cover_image && !project.cover_image.startsWith('http')
+            " :src="url + '/storage/' + project.cover_image" class="card-img-top" />
           <img v-else :src="project.cover_image" class="card-img-top" />
         </div>
       </div>
@@ -55,7 +51,7 @@ export default {
           TIPOLOGIA DI FILE: "{{ project.type.name }}"
         </div>
 
-        
+
         <div v-if="project.technologies.length != 0">
           <span>tecnologie usate:</span>
           <ul>
@@ -67,9 +63,7 @@ export default {
 
         <div class="d-flex gap-3 mb-3">
           <a :href="project.link_github">link github</a>
-          <a :href="project.link_website"
-            >link website</a
-          >
+          <a :href="project.link_website">link website</a>
         </div>
       </div>
     </div>
@@ -104,8 +98,8 @@ export default {
   border-radius: 10px;
   transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 
-  a{
-    color:white;
+  a {
+    color: white;
   }
 }
 
@@ -129,7 +123,7 @@ export default {
   box-shadow: none;
   color: white;
 
-  a{
+  a {
     color: yellow;
   }
 }
