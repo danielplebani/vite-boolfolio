@@ -7,7 +7,6 @@ export default {
   data() {
     return {
       state,
-      pages: null,
     };
   },
 
@@ -24,18 +23,18 @@ export default {
 
     previousPage() {
       if (this.state.currentPage === 1) {
-        this.state.currentPage = 2
+        this.state.currentPage = parseInt(this.state.links[this.state.links.length - 2].label);
       } else {
-        this.state.currentPage--
+        this.state.currentPage--;
       }
       this.state.connectAPI();
     },
 
     nextPage() {
-      if (this.state.currentPage === 2) {
-        this.state.currentPage = 1
+      if (this.state.currentPage === parseInt(this.state.links[this.state.links.length - 2].label)) {
+        this.state.currentPage = 1;
       } else {
-        this.state.currentPage++
+        this.state.currentPage++;
       }
       this.state.connectAPI();
     },
@@ -48,13 +47,12 @@ export default {
 </script>
 
 <template>
-  <div class="p-5 mb-4 bg-dark text-light">
-    <div class="container-fluid py-5">
+  <div class="px-5 mb-4 bg-dark text-light">
+    <div class="container-fluid py-3">
       <h1 class="display-5 fw-bold">I miei progetti</h1>
       <p class="col-md-8 fs-4">
         Lorem ipsum dolor, sit amet consectetur adipisicing elit.
       </p>
-      <button class="btn btn-primary btn-lg" type="button">Trova</button>
     </div>
   </div>
 
@@ -125,10 +123,20 @@ export default {
         </a>
       </li>
       <li class="page-item">
-        <a class="page-link" :class="this.state.currentPage === 1 ? 'bg-dark' : ''" @click="firstPage()">1</a>
+        <a
+          class="page-link"
+          :class="this.state.currentPage === 1 ? 'bg-dark' : ''"
+          @click="firstPage()"
+          >1</a
+        >
       </li>
       <li class="page-item">
-        <a class="page-link" :class="this.state.currentPage === 2 ? 'bg-dark' : ''" @click="secondPage()">2</a>
+        <a
+          class="page-link"
+          :class="this.state.currentPage === 2 ? 'bg-dark' : ''"
+          @click="secondPage()"
+          >2</a
+        >
       </li>
 
       <li class="page-item">
@@ -138,7 +146,6 @@ export default {
       </li>
     </ul>
   </nav>
-
 </template>
 
 <style lang="scss" scoped>

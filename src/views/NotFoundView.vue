@@ -12,8 +12,6 @@
     </div>
   </template>
 
-
-
 <style lang="scss" scoped>
 .container{
   min-height: 70vh;
