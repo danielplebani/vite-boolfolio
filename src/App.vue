@@ -15,5 +15,4 @@ export default {
   <app_header></app_header>
   <router-view></router-view>
   <app_footer></app_footer>
-  
 </template>

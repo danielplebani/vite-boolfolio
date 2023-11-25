@@ -1,8 +1,74 @@
 <script>
+import axios from 'axios'
+
 export default {
-  name: "ContactsView",
-};
+  name: 'ContactsView',
+  data() {
+    return {
+      base_url: 'http://127.0.0.1:8000',
+      loading: false,
+      name: '',
+      email: '',
+      phone: '',
+      message: '',
+      errors: [],
+      success: null
+    }
+  },
+  methods: {
+    sendForm() {
+
+      this.loading = true;
+      this.errors = [];
+      this.success = null
+
+      const payload = {
+        name: this.name,
+        email: this.email,
+        phone: this.phone,
+        message: this.message,
+      };
+      console.log(payload);
+
+
+      axios.post(this.base_url + '/api/contacts', payload)
+        .then(response => {
+
+          const success = response.data.success
+          if (!success) {
+            // there are errors
+            console.log(response);
+            console.log(response.data.errors);
+            this.errors = response.data.errors
+          } else {
+            // All good
+            console.log(response);
+            console.log(response.data.message);
+            // empty the form
+            this.name = ''
+            this.email = ''
+            this.message = ''
+            this.phone = ''
+
+            // print a success message
+            this.success = response.data.message
+          }
+          this.loading = false
+
+
+        })
+        .catch(error => {
+          console.error(error.message);
+        })
+
+    }
+  }
+
+}
 </script>
+
+
+
 
 <template>
   <div class="px-5 bg-dark text-light">
@@ -12,33 +78,95 @@ export default {
     </div>
   </div>
 
-  <div class="container d-flex justify-content-around py-5">
-    <div class="form-container">
-      <form class="form">
-        <div class="form-group">
-          <label for="name">Nome e cognome</label>
-          <input required="" name="name" id="name" type="text" />
+  <div class="container d-flex justify-content-center gap-5 py-5">
+    <div class="container">
+      <form action="" v-on:submit.prevent="sendForm()">
+        <div v-if="!loading">
+          <div class="mb-3">
+            <label for="name" class="form-label text-uppercase">Name</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Mario Rossi"
+              aria-describedby="nameHelper" v-model="name" :class="{ 'is-invalid': errors.name }">
+            <small id="nameHelper" class="text-muted">Type your name</small>
+
+            <div class="alert alert-danger" role="alert" v-if="errors.name">
+              <strong>Erorrs!</strong>
+
+              <ul>
+                <li v-for="message in errors.name">{{ message }}</li>
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div class="mb-3">
+            <label for="phone" class="form-label  text-uppercase">phone</label>
+            <input type="tel" name="phone" id="phone" class="form-control" placeholder="123456"
+              aria-describedby="phoneHelper" v-model="phone" :class="{ 'is-invalid': errors.phone }">
+            <small id="phoneHelper" class="text-muted">Type your phone</small>
+
+            <div class="alert alert-danger" role="alert" v-if="errors.phone">
+              <strong>Erorrs!</strong>
+
+              <ul>
+                <li v-for="message in errors.phone">{{ message }}</li>
+              </ul>
+
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label text-uppercase">email</label>
+            <input type="text" name="email" id="email" class="form-control" placeholder="mario@musk.com"
+              aria-describedby="emailHelper" v-model="email" :class="{ 'is-invalid': errors.email }">
+            <small id="emailHelper" class="text-muted">Type your email</small>
+
+            <div class="alert alert-danger" role="alert" v-if="errors.email">
+              <strong>Erorrs!</strong>
+
+              <ul>
+                <li v-for="message in errors.email">{{ message }}</li>
+              </ul>
+
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" name="message" id="message" rows="3"
+              placeholder="Inserisci il tuo messaggio..." v-model="message"
+              :class="{ 'is-invalid': errors.message }"></textarea>
+
+            <div class="alert alert-danger" role="alert" v-if="errors.message">
+              <strong>Erors!</strong>
+
+              <ul>
+                <li v-for="message in errors.message">{{ message }}</li>
+              </ul>
+
+            </div>
+          </div>
+
+          <button type="submit" class="btn mb-3" :class="{ ' btn-primary w-100': !loading }" :disabled="loading">
+            <span>
+              Send
+            </span>
+          </button>
         </div>
-        <div class="form-group">
-          <label for="phone">Numero di telefono</label>
-          <input required="" name="phone" id="phone" type="text" />
+
+
+        <div class="three-body" v-else>
+          <div class="three-body__dot"></div>
+          <div class="three-body__dot"></div>
+          <div class="three-body__dot"></div>
         </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input required="" name="email" id="email" type="text" />
+
+
+        <div class="alert alert-success" role="alert" v-if="success">
+          <strong>
+            La mail è stata inviata correttamente!
+          </strong>
         </div>
-        <div class="form-group">
-          <label for="message">Come posso aiutarti?</label>
-          <textarea
-            required=""
-            cols="50"
-            rows="10"
-            id="message"
-            name="message"
-          >
-          </textarea>
-        </div>
-        <button type="submit" class="form-submit-btn">Submit</button>
+
       </form>
     </div>
 
@@ -48,229 +176,82 @@ export default {
           <svg xmlns="http://www.w3.org/2000/svg" width="100%">
             <rect fill="#ffffff" width="540" height="450"></rect>
             <defs>
-              <linearGradient
-                id="a"
-                gradientUnits="userSpaceOnUse"
-                x1="0"
-                x2="0"
-                y1="0"
-                y2="100%"
-                gradientTransform="rotate(222,648,379)"
-              >
+              <linearGradient id="a" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="100%"
+                gradientTransform="rotate(222,648,379)">
                 <stop offset="0" stop-color="#ffffff"></stop>
                 <stop offset="1" stop-color="#FC726E"></stop>
               </linearGradient>
-              <pattern
-                patternUnits="userSpaceOnUse"
-                id="b"
-                width="300"
-                height="250"
-                x="0"
-                y="0"
-                viewBox="0 0 1080 900"
-              >
+              <pattern patternUnits="userSpaceOnUse" id="b" width="300" height="250" x="0" y="0" viewBox="0 0 1080 900">
                 <g fill-opacity="0.5">
                   <polygon fill="#444" points="90 150 0 300 180 300"></polygon>
                   <polygon points="90 150 180 0 0 0"></polygon>
                   <polygon fill="#AAA" points="270 150 360 0 180 0"></polygon>
-                  <polygon
-                    fill="#DDD"
-                    points="450 150 360 300 540 300"
-                  ></polygon>
+                  <polygon fill="#DDD" points="450 150 360 300 540 300"></polygon>
                   <polygon fill="#999" points="450 150 540 0 360 0"></polygon>
                   <polygon points="630 150 540 300 720 300"></polygon>
                   <polygon fill="#DDD" points="630 150 720 0 540 0"></polygon>
-                  <polygon
-                    fill="#444"
-                    points="810 150 720 300 900 300"
-                  ></polygon>
+                  <polygon fill="#444" points="810 150 720 300 900 300"></polygon>
                   <polygon fill="#FFF" points="810 150 900 0 720 0"></polygon>
-                  <polygon
-                    fill="#DDD"
-                    points="990 150 900 300 1080 300"
-                  ></polygon>
+                  <polygon fill="#DDD" points="990 150 900 300 1080 300"></polygon>
                   <polygon fill="#444" points="990 150 1080 0 900 0"></polygon>
                   <polygon fill="#DDD" points="90 450 0 600 180 600"></polygon>
                   <polygon points="90 450 180 300 0 300"></polygon>
-                  <polygon
-                    fill="#666"
-                    points="270 450 180 600 360 600"
-                  ></polygon>
-                  <polygon
-                    fill="#AAA"
-                    points="270 450 360 300 180 300"
-                  ></polygon>
-                  <polygon
-                    fill="#DDD"
-                    points="450 450 360 600 540 600"
-                  ></polygon>
-                  <polygon
-                    fill="#999"
-                    points="450 450 540 300 360 300"
-                  ></polygon>
-                  <polygon
-                    fill="#999"
-                    points="630 450 540 600 720 600"
-                  ></polygon>
-                  <polygon
-                    fill="#FFF"
-                    points="630 450 720 300 540 300"
-                  ></polygon>
+                  <polygon fill="#666" points="270 450 180 600 360 600"></polygon>
+                  <polygon fill="#AAA" points="270 450 360 300 180 300"></polygon>
+                  <polygon fill="#DDD" points="450 450 360 600 540 600"></polygon>
+                  <polygon fill="#999" points="450 450 540 300 360 300"></polygon>
+                  <polygon fill="#999" points="630 450 540 600 720 600"></polygon>
+                  <polygon fill="#FFF" points="630 450 720 300 540 300"></polygon>
                   <polygon points="810 450 720 600 900 600"></polygon>
-                  <polygon
-                    fill="#DDD"
-                    points="810 450 900 300 720 300"
-                  ></polygon>
-                  <polygon
-                    fill="#AAA"
-                    points="990 450 900 600 1080 600"
-                  ></polygon>
-                  <polygon
-                    fill="#444"
-                    points="990 450 1080 300 900 300"
-                  ></polygon>
+                  <polygon fill="#DDD" points="810 450 900 300 720 300"></polygon>
+                  <polygon fill="#AAA" points="990 450 900 600 1080 600"></polygon>
+                  <polygon fill="#444" points="990 450 1080 300 900 300"></polygon>
                   <polygon fill="#222" points="90 750 0 900 180 900"></polygon>
                   <polygon points="270 750 180 900 360 900"></polygon>
-                  <polygon
-                    fill="#DDD"
-                    points="270 750 360 600 180 600"
-                  ></polygon>
+                  <polygon fill="#DDD" points="270 750 360 600 180 600"></polygon>
                   <polygon points="450 750 540 600 360 600"></polygon>
                   <polygon points="630 750 540 900 720 900"></polygon>
-                  <polygon
-                    fill="#444"
-                    points="630 750 720 600 540 600"
-                  ></polygon>
-                  <polygon
-                    fill="#AAA"
-                    points="810 750 720 900 900 900"
-                  ></polygon>
-                  <polygon
-                    fill="#666"
-                    points="810 750 900 600 720 600"
-                  ></polygon>
-                  <polygon
-                    fill="#999"
-                    points="990 750 900 900 1080 900"
-                  ></polygon>
+                  <polygon fill="#444" points="630 750 720 600 540 600"></polygon>
+                  <polygon fill="#AAA" points="810 750 720 900 900 900"></polygon>
+                  <polygon fill="#666" points="810 750 900 600 720 600"></polygon>
+                  <polygon fill="#999" points="990 750 900 900 1080 900"></polygon>
                   <polygon fill="#999" points="180 0 90 150 270 150"></polygon>
                   <polygon fill="#444" points="360 0 270 150 450 150"></polygon>
                   <polygon fill="#FFF" points="540 0 450 150 630 150"></polygon>
                   <polygon points="900 0 810 150 990 150"></polygon>
                   <polygon fill="#222" points="0 300 -90 450 90 450"></polygon>
                   <polygon fill="#FFF" points="0 300 90 150 -90 150"></polygon>
-                  <polygon
-                    fill="#FFF"
-                    points="180 300 90 450 270 450"
-                  ></polygon>
-                  <polygon
-                    fill="#666"
-                    points="180 300 270 150 90 150"
-                  ></polygon>
-                  <polygon
-                    fill="#222"
-                    points="360 300 270 450 450 450"
-                  ></polygon>
-                  <polygon
-                    fill="#FFF"
-                    points="360 300 450 150 270 150"
-                  ></polygon>
-                  <polygon
-                    fill="#444"
-                    points="540 300 450 450 630 450"
-                  ></polygon>
-                  <polygon
-                    fill="#222"
-                    points="540 300 630 150 450 150"
-                  ></polygon>
-                  <polygon
-                    fill="#AAA"
-                    points="720 300 630 450 810 450"
-                  ></polygon>
-                  <polygon
-                    fill="#666"
-                    points="720 300 810 150 630 150"
-                  ></polygon>
-                  <polygon
-                    fill="#FFF"
-                    points="900 300 810 450 990 450"
-                  ></polygon>
-                  <polygon
-                    fill="#999"
-                    points="900 300 990 150 810 150"
-                  ></polygon>
+                  <polygon fill="#FFF" points="180 300 90 450 270 450"></polygon>
+                  <polygon fill="#666" points="180 300 270 150 90 150"></polygon>
+                  <polygon fill="#222" points="360 300 270 450 450 450"></polygon>
+                  <polygon fill="#FFF" points="360 300 450 150 270 150"></polygon>
+                  <polygon fill="#444" points="540 300 450 450 630 450"></polygon>
+                  <polygon fill="#222" points="540 300 630 150 450 150"></polygon>
+                  <polygon fill="#AAA" points="720 300 630 450 810 450"></polygon>
+                  <polygon fill="#666" points="720 300 810 150 630 150"></polygon>
+                  <polygon fill="#FFF" points="900 300 810 450 990 450"></polygon>
+                  <polygon fill="#999" points="900 300 990 150 810 150"></polygon>
                   <polygon points="0 600 -90 750 90 750"></polygon>
                   <polygon fill="#666" points="0 600 90 450 -90 450"></polygon>
-                  <polygon
-                    fill="#AAA"
-                    points="180 600 90 750 270 750"
-                  ></polygon>
-                  <polygon
-                    fill="#444"
-                    points="180 600 270 450 90 450"
-                  ></polygon>
-                  <polygon
-                    fill="#444"
-                    points="360 600 270 750 450 750"
-                  ></polygon>
-                  <polygon
-                    fill="#999"
-                    points="360 600 450 450 270 450"
-                  ></polygon>
-                  <polygon
-                    fill="#666"
-                    points="540 600 630 450 450 450"
-                  ></polygon>
-                  <polygon
-                    fill="#222"
-                    points="720 600 630 750 810 750"
-                  ></polygon>
-                  <polygon
-                    fill="#FFF"
-                    points="900 600 810 750 990 750"
-                  ></polygon>
-                  <polygon
-                    fill="#222"
-                    points="900 600 990 450 810 450"
-                  ></polygon>
+                  <polygon fill="#AAA" points="180 600 90 750 270 750"></polygon>
+                  <polygon fill="#444" points="180 600 270 450 90 450"></polygon>
+                  <polygon fill="#444" points="360 600 270 750 450 750"></polygon>
+                  <polygon fill="#999" points="360 600 450 450 270 450"></polygon>
+                  <polygon fill="#666" points="540 600 630 450 450 450"></polygon>
+                  <polygon fill="#222" points="720 600 630 750 810 750"></polygon>
+                  <polygon fill="#FFF" points="900 600 810 750 990 750"></polygon>
+                  <polygon fill="#222" points="900 600 990 450 810 450"></polygon>
                   <polygon fill="#DDD" points="0 900 90 750 -90 750"></polygon>
-                  <polygon
-                    fill="#444"
-                    points="180 900 270 750 90 750"
-                  ></polygon>
-                  <polygon
-                    fill="#FFF"
-                    points="360 900 450 750 270 750"
-                  ></polygon>
-                  <polygon
-                    fill="#AAA"
-                    points="540 900 630 750 450 750"
-                  ></polygon>
-                  <polygon
-                    fill="#FFF"
-                    points="720 900 810 750 630 750"
-                  ></polygon>
-                  <polygon
-                    fill="#222"
-                    points="900 900 990 750 810 750"
-                  ></polygon>
-                  <polygon
-                    fill="#222"
-                    points="1080 300 990 450 1170 450"
-                  ></polygon>
-                  <polygon
-                    fill="#FFF"
-                    points="1080 300 1170 150 990 150"
-                  ></polygon>
+                  <polygon fill="#444" points="180 900 270 750 90 750"></polygon>
+                  <polygon fill="#FFF" points="360 900 450 750 270 750"></polygon>
+                  <polygon fill="#AAA" points="540 900 630 750 450 750"></polygon>
+                  <polygon fill="#FFF" points="720 900 810 750 630 750"></polygon>
+                  <polygon fill="#222" points="900 900 990 750 810 750"></polygon>
+                  <polygon fill="#222" points="1080 300 990 450 1170 450"></polygon>
+                  <polygon fill="#FFF" points="1080 300 1170 150 990 150"></polygon>
                   <polygon points="1080 600 990 750 1170 750"></polygon>
-                  <polygon
-                    fill="#666"
-                    points="1080 600 1170 450 990 450"
-                  ></polygon>
-                  <polygon
-                    fill="#DDD"
-                    points="1080 900 1170 750 990 750"
-                  ></polygon>
+                  <polygon fill="#666" points="1080 600 1170 450 990 450"></polygon>
+                  <polygon fill="#DDD" points="1080 900 1170 750 990 750"></polygon>
                 </g>
               </pattern>
             </defs>
@@ -279,10 +260,7 @@ export default {
           </svg>
         </div>
         <div class="card__avatar">
-          <img
-            style="width: 100px"
-            src="https://www.svgrepo.com/show/341256/user-avatar-filled.svg"
-          />
+          <img style="width: 100px" src="https://www.svgrepo.com/show/341256/user-avatar-filled.svg" />
         </div>
         <div class="card__title">Plebani Daniel</div>
         <div class="card__subtitle">Full Stack Web Developer</div>
@@ -320,7 +298,114 @@ export default {
   </div>
 </template>
 
+
+
+
 <style lang="scss" scoped>
+.three-body {
+  --uib-size: 35px;
+  --uib-speed: 0.8s;
+  --uib-color: #5D3FD3;
+  position: relative;
+  display: inline-block;
+  height: var(--uib-size);
+  width: var(--uib-size);
+  animation: spin78236 calc(var(--uib-speed) * 2.5) infinite linear;
+}
+
+.three-body__dot {
+  position: absolute;
+  height: 100%;
+  width: 30%;
+}
+
+.three-body__dot:after {
+  content: '';
+  position: absolute;
+  height: 0%;
+  width: 100%;
+  padding-bottom: 100%;
+  background-color: var(--uib-color);
+  border-radius: 50%;
+}
+
+.three-body__dot:nth-child(1) {
+  bottom: 5%;
+  left: 0;
+  transform: rotate(60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(1)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite ease-in-out;
+  animation-delay: calc(var(--uib-speed) * -0.3);
+}
+
+.three-body__dot:nth-child(2) {
+  bottom: 5%;
+  right: 0;
+  transform: rotate(-60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(2)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15) ease-in-out;
+}
+
+.three-body__dot:nth-child(3) {
+  bottom: -5%;
+  left: 0;
+  transform: translateX(116.666%);
+}
+
+.three-body__dot:nth-child(3)::after {
+  top: 0;
+  left: 0;
+  animation: wobble2 var(--uib-speed) infinite ease-in-out;
+}
+
+@keyframes spin78236 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wobble1 {
+
+  0%,
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(-66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
+
+@keyframes wobble2 {
+
+  0%,
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
+
 #social {
   .main {
     display: flex;
@@ -447,6 +532,7 @@ export default {
 
 #my-profile {
   cursor: pointer;
+
   .card {
     --main-color: #000;
     --submain-color: #78858f;
@@ -528,121 +614,5 @@ export default {
     background: var(--bg-color);
     color: var(--main-color);
   }
-}
-
-.form-container {
-  width: 400px;
-  background: linear-gradient(#212121, #212121) padding-box,
-    linear-gradient(145deg, transparent 35%, #e81cff, #40c9ff) border-box;
-  border: 2px solid transparent;
-  padding: 32px 24px;
-  font-size: 14px;
-  font-family: inherit;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-sizing: border-box;
-  border-radius: 16px;
-  background-size: 200% 100%;
-  animation: gradient 5s ease infinite;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.form-container button:active {
-  scale: 0.95;
-}
-
-.form-container .form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.form-container .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.form-container .form-group label {
-  display: block;
-  margin-bottom: 5px;
-  color: #717171;
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.form-container .form-group input {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  color: #fff;
-  font-family: inherit;
-  background-color: transparent;
-  border: 1px solid #414141;
-}
-
-.form-container .form-group textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  resize: none;
-  color: #fff;
-  height: 96px;
-  border: 1px solid #414141;
-  background-color: transparent;
-  font-family: inherit;
-}
-
-.form-container .form-group input::placeholder {
-  opacity: 0.5;
-}
-
-.form-container .form-group input:focus {
-  outline: none;
-  border-color: #e81cff;
-}
-
-.form-container .form-group textarea:focus {
-  outline: none;
-  border-color: #e81cff;
-}
-
-.form-container .form-submit-btn {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  align-self: flex-start;
-  font-family: inherit;
-  color: #717171;
-  font-weight: 600;
-  width: 40%;
-  background: #313131;
-  border: 1px solid #414141;
-  padding: 12px 16px;
-  font-size: inherit;
-  gap: 8px;
-  margin-top: 8px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.form-container .form-submit-btn:hover {
-  background-color: #fff;
-  border-color: #fff;
 }
 </style>

@@ -84,6 +84,8 @@ export default {
   </div>
 </template>
 
+
+
 <style lang="scss" scoped>
 .MagicCardProject {
   position: relative;
